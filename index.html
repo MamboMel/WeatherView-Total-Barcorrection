@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#050b16">
+    <title>AstroFire · Satellite Fire Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="css/style.css?v=peru-weather-20261108">
+</head>
+<body>
+    <aside id="info-panel" aria-label="Mission overview">
+        <header class="panel-header">
+            <div class="brand">
+                <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".35"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="currentColor" stroke-width="1.5" transform="rotate(-28 16 16)"/><circle cx="16" cy="16" r="4" fill="var(--orange)"/></svg>
+                <div>
+                    <h1>Satellite Fire Detection</h1>
+                    <p class="subtitle">Powered by NASA FIRMS</p>
+                    <p id="fireDataStatus" class="data-source-status">Conectando con NASA FIRMS…</p>
+                </div>
+            </div>
+            <span id="liveChip" class="live-chip" title="NASA FIRMS conectada" aria-label="NASA FIRMS conectada"><i></i><span id="liveChipLabel">Live</span></span>
+        </header>
+
+        <section class="stats-grid" aria-label="Key figures">
+            <div class="stat-card"><div class="stat-label">Fires detected</div><div class="stat-value" id="fireCount">0</div></div>
+            <div class="stat-card"><div class="stat-label">Fires handled</div><div class="stat-value" id="firesHandled">0</div></div>
+            <div class="stat-card"><div class="stat-label">Response time <small>min</small></div><div class="stat-value" id="responseTime">--</div></div>
+            <div class="stat-card highlight"><div class="stat-label">Time saved <small>hrs</small></div><div class="stat-value" id="timeSaved">0</div></div>
+        </section>
+
+        <section class="comparison-section" aria-label="Response time comparison">
+            <h3>Response time comparison</h3>
+            <div class="comparison-item">
+                <div class="comparison-row"><span class="comparison-label">Without satellite</span><span class="comparison-value old">~120 min</span></div>
+                <div class="bar"><span class="old" style="--w:100%"></span></div>
+            </div>
+            <div class="comparison-item">
+                <div class="comparison-row"><span class="comparison-label">With satellite</span><span class="comparison-value new" id="avgResponseTime">~25 min</span></div>
+                <div class="bar"><span class="new" id="avgBar" style="--w:21%"></span></div>
+            </div>
+        </section>
+
+        <button class="btn-primary panel-cta" onclick="toggleDashboardView()">Open executive dashboard</button>
+
+    </aside>
+
+    <!-- Executive dashboard (opened from the panel button) -->
+    <div id="executive-dashboard" class="executive-dashboard" style="display: none;" role="dialog" aria-label="Executive dashboard">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h3>Executive dashboard</h3>
+                <p>Mission performance and system status</p>
+            </div>
+            <div class="dashboard-controls">
+                <button class="control-btn" onclick="exportExecutiveReport()">Export report</button>
+                <button class="control-btn" onclick="refreshDashboard()">Refresh</button>
+                <button class="control-btn close" onclick="toggleDashboardView()">Back to map</button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="dash-card kpi-section" aria-label="Mission control KPIs">
+                <h4>Mission control KPIs</h4>
+                <div class="kpi-grid">
+                    <div class="kpi-card primary"><div class="kpi-label">Satellite status</div><div class="kpi-value" id="satellite-status">Operational</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Earth coverage</div><div class="kpi-value" id="coverage-percent">94.7%</div></div>
+                    <div class="kpi-card"><div class="kpi-label">System uptime</div><div class="kpi-value" id="system-uptime">99.9%</div></div>
+                    <div class="kpi-card"><div class="kpi-label">Detection accuracy</div><div class="kpi-value" id="detection-accuracy">97.3%</div></div>
+                </div>
+            </section>
+
+            <section class="dash-card chart-card" aria-label="Response time">
+                <h4>Response time</h4>
+                <div class="chart-container"><canvas id="responseTimeChart"></canvas></div>
+            </section>
+
+            <section class="dash-card chart-card" aria-label="Detection trend">
+                <h4>Detection trend</h4>
+                <div class="chart-container"><canvas id="detectionTrendChart"></canvas></div>
+            </section>
+
+            <section class="dash-card health-section" aria-label="System health">
+                <h4>System health</h4>
+                <div class="health-grid">
+                    <div class="health-item"><span class="health-indicator healthy"></span><span>Fire detection engine</span></div>
+                    <div class="health-item"><span class="health-indicator healthy"></span><span>Satellite communication</span></div>
+                    <div class="health-item"><span class="health-indicator healthy"></span><span>Data processing pipeline</span></div>
+                    <div class="health-item"><span class="health-indicator warning"></span><span>Weather data integration</span></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Fire alert toast (shown by fires.js, hidden by default) -->
+    <div id="alert-container" class="hidden" role="alert">
+        <div class="alert-box">
+            <span class="alert-icon" aria-hidden="true"></span>
+            <div class="alert-body">
+                <h2>Fire alert detected</h2>
+                <p id="alertMessage">New heat source detected by satellite</p>
+                <div class="alert-details">
+                    <p><strong>Confidence</strong> <span id="alertConfidence">--</span>%</p>
+                    <p><strong>Temperature</strong> <span id="alertTemp">--</span>°C</p>
+                    <p><strong>Humidity</strong> <span id="alertHumidity">--</span>%</p>
+                    <p><strong>Risk</strong> <span id="alertRisk">--</span></p>
+                </div>
+            </div>
+            <button id="dismissAlert" class="btn-alert">Dismiss</button>
+        </div>
+    </div>
+
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content"><div class="spinner"></div><p>Loading NASA FIRMS data…</p></div>
+    </div>
+    <nav class="pill-nav" aria-label="Módulos"><a class="agro-link" href="fuego.html">Calendario de fuego</a><a class="agro-link" href="agro.html">Portal agroproductor</a></nav>
+
+    <aside class="map-layers" aria-label="Map layers">
+        <h4>Map layers</h4>
+        <div class="layer-toggle">
+            <label class="layer-option" for="temperatureLayer"><span>Temperature</span><input type="checkbox" id="temperatureLayer" checked></label>
+            <label class="layer-option" for="smokeLayer"><span>Smoke plumes</span><input type="checkbox" id="smokeLayer" checked></label>
+            <label class="layer-option" for="windLayer"><span>Wind patterns</span><input type="checkbox" id="windLayer"></label>
+            <label class="layer-option" for="satelliteLayer"><span>Satellite track</span><input type="checkbox" id="satelliteLayer" checked></label>
+        </div>
+        <div class="layer-legend">
+            <h5>Legend</h5>
+            <div class="legend-item"><i class="legend-color" style="background: linear-gradient(45deg, #ff4444, #ffaa00);"></i><span>Hot spots (35°C+)</span></div>
+            <div class="legend-item"><i class="legend-color" style="background: rgba(255, 255, 255, 0.6);"></i><span>Smoke coverage</span></div>
+            <div class="legend-item"><i class="legend-color" style="background: rgba(99, 216, 255, 0.6);"></i><span>Wind direction</span></div>
+        </div>
+    </aside>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <!-- Chart.js para gráficos del dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Scripts de la aplicación -->
+    <script src="js/config.local.js?v=local-test"></script>
+    <script src="js/config.js?v=final-15s-20261109"></script>
+    <script src="js/harmonize.js"></script>
+    <script src="js/api.js?v=land-filter-20261109"></script>
+    <script src="js/scene.js"></script>
+    <script src="js/earth.js"></script>
+    <script src="js/satellite.js?v=no-orbit-guides-20261027"></script>
+    <script src="js/fires.js?v=live-chip-20261109"></script>
+    <script src="js/stats.js"></script>
+    <script src="js/main.js?v=peru-weather-20261108"></script>
+    <script>
+        // Keeps the "with satellite" bar proportional to the live average (baseline: 120 min)
+        (function () {
+            const label = document.getElementById('avgResponseTime'), bar = document.getElementById('avgBar');
+            if (!label || !bar) return;
+            new MutationObserver(() => {
+                const m = parseInt(label.textContent.replace(/\D/g, ''), 10);
+                if (m) bar.style.setProperty('--w', Math.min(100, (m / 120) * 100).toFixed(0) + '%');
+            }).observe(label, { childList: true, characterData: true, subtree: true });
+        })();
+    </script>
+</body>
+</html>

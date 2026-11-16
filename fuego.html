@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calendario de incendios · ASTROFIRE</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{--ink:#eaf2ff;--muted:#8ea1bb;--line:rgba(150,180,220,.2);--cyan:#63d8ff;--orange:#ff9a62;--mint:#55e0b5;--panel:rgba(9,18,34,.86)}
+*{box-sizing:border-box;margin:0}body{color:var(--ink);font:15px/1.5 'DM Sans',system-ui,sans-serif;background:radial-gradient(circle at 70% 0,#122848,#071222 40%,#030710 85%) fixed;min-height:100vh}
+header{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line)}
+h1,h2{font-family:'Space Grotesk',sans-serif;font-weight:600}h1{font-size:1.1rem}h2{font-size:1rem;margin-bottom:8px}
+nav a{color:var(--cyan);margin-left:14px;font-size:.85rem;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:16px;display:grid;gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+select,button{font:inherit;color:var(--ink);background:#0b192d;border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-height:40px;cursor:pointer}
+#map{height:300px;border-radius:10px;margin-top:10px;z-index:1}.muted{color:var(--muted);font-size:.82rem}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.kpis b{display:block;font:600 1.3rem 'Space Grotesk',sans-serif}
+#cal{overflow-x:auto;margin-top:10px}.cal{display:grid;grid-template-columns:40px repeat(53,minmax(11px,1fr));gap:2px;min-width:700px;align-items:center}
+.cal i{aspect-ratio:1;border-radius:2px;background:rgba(255,255,255,.05)}.cal i.u{outline:2px solid var(--cyan)}.cal i.c{box-shadow:0 0 0 1px var(--orange)}.cal span{font-size:.7rem;color:var(--muted)}
+.badge{padding:3px 10px;border-radius:999px;font-size:.78rem;border:1px solid var(--line)}.sim{color:var(--orange);border-color:var(--orange)}.real{color:var(--mint);border-color:var(--mint)}
+</style><meta name="theme-color" content="#071222"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-color='%23ff9a62'/%3E%3Cstop offset='1' stop-color='%2363d8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='url(%23g)' stroke-width='5'/%3E%3C/svg%3E"><link rel="stylesheet" href="css/ui.css"></head><body><a class="skip" href="#main">Saltar al contenido</a>
+<header><h1><b>ASTROFIRE</b><span class="sub">Calendario de fuego · MODIS + VIIRS</span></h1><nav aria-label="Módulos"><a href="index.html">Globo 3D</a><a href="fuego.html" aria-current="page">Calendario de fuego</a><a href="agro.html">Portal agro</a></nav></header>
+<div class="wrap" id="main">
+<section class="card"><h2>Área de interés</h2><div class="row"><select id="aoi"><option value="peru">Perú completo</option><option value="ucayali">Ucayali (aprox.)</option><option value="mdd">Madre de Dios (aprox.)</option><option value="draw">Rectángulo dibujado</option></select><button id="draw">Dibujar rectángulo</button><span class="muted" id="msg"></span></div><div id="map"></div></section>
+<section class="card"><div class="row" style="justify-content:space-between"><h2>Actividad semanal por año</h2><span id="src" class="badge"></span></div>
+<div class="kpis"><div><span class="muted">Eventos armonizados</span><b id="k1">–</b></div><div><span class="muted">Vistos por ambos sensores</span><b id="k2">–</b></div><div><span class="muted">Semanas críticas (pico histórico)</span><b id="k3">–</b></div><div><span class="muted">Año en curso</span><b id="k4">–</b></div></div>
+<div id="cal"></div><div class="legend"><span class="muted">Menos</span><i class="ramp"></i><span class="muted">Más eventos</span><span class="key"><i class="k c"></i>Semana crítica (pico histórico)</span><span class="key"><i class="k u"></i>Semana inusual (≥ 1,5 desviaciones)</span></div></section>
+<section class="card"><h2>Cómo armonizamos</h2><p class="muted">VIIRS (375 m) y MODIS (1 km) no se suman directamente: ambos se llevan a un esquema común y a una grilla de ~1 km × día. Si los dos sensores ven la misma celda el mismo día cuenta como un solo evento (marcado MV). Suomi NPP dejó de entregar datos nuevos el 2-nov-2026, por eso el flujo en vivo usa NOAA-20, NOAA-21 y MODIS.</p><button id="exp" style="margin-top:10px">Exportar CSV del área</button></section>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/harmonize.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const PRE={peru:[[-18.5,-81.5],[0,-68.5]],ucayali:[[-11.9,-75.9],[-7.3,-70.5]],mdd:[[-13.7,-72.6],[-9.9,-68.7]]};
+const rect=([a,b])=>[[a[0],a[1]],[a[0],b[1]],[b[0],b[1]],[b[0],a[1]]];
+const farms=()=>{try{return JSON.parse(localStorage.getItem('agro_users')||'{}')[localStorage.getItem('agro_session')]?.chacras||[]}catch{return[]}};
+let drawn=null,pts=[],poly=null,lastEv=[];
+const map=L.map('map').setView([-9.2,-75],5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+farms().forEach(c=>$('#aoi').insertAdjacentHTML('beforeend',`<option value="f${c.id}">Chacra: ${String(c.name).replace(/[<&]/g,'')} (entorno 10 km)</option>`));
+const aoiPoly=v=>PRE[v]?rect(PRE[v]):v==='draw'?drawn||rect(PRE.peru):Harmonize.farmPoly(farms().find(c=>'f'+c.id===v));
+function render(h,c){
+ const ev=lastEv=h.events,max=Math.max(1,...Object.values(c.M).flat()),n={M:0,V:0,MV:0};ev.forEach(e=>n[e.sensors]++);
+ $('#src').className='badge '+(h.real?'real':'sim');$('#src').textContent=h.real?'REAL · FIRMS (MODIS + VIIRS)':'SIMULADO · corre tools/build_fire_history.py para datos reales';
+ $('#k1').textContent=ev.length.toLocaleString('es-PE');$('#k2').textContent=(ev.length?Math.round(100*n.MV/ev.length):0)+'%';
+ $('#k3').textContent=c.critical.map(Harmonize.label).join(' · ')||'–';$('#k4').textContent=c.cur?(c.unusual.length?c.unusual.length+' sem. inusuales en '+c.cur:'Sin anomalías en '+c.cur):'–';
+ $('#cal').innerHTML='<div class="calw"><div class="months">'+['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'].map(m=>`<span>${m}</span>`).join('')+'</div><div class="cal">'+c.ys.map(y=>`<span>${y}</span>`+c.M[y].map((v,w)=>`<i title="${y} · sem. ${w+1}: ${v} eventos" class="${y===c.cur&&c.unusual.includes(w)?'u ':''}${c.critical.includes(w)?'c':''}" ${v?`style="background:rgba(255,120,60,${(.2+.8*Math.sqrt(v/max)).toFixed(2)})"`:''}></i>`).join('')).join('')+'</div></div>';
+}
+async function run(){
+ const p=aoiPoly($('#aoi').value);if(poly)poly.remove();poly=L.polygon(p,{color:'#ff9a62',weight:2}).addTo(map);map.fitBounds(poly.getBounds());
+ $('#cal').innerHTML='<div class="skel"></div><div class="skel"></div>';const h=await Harmonize.history(p);render(h,Harmonize.calendar(h.events));
+}
+$('#aoi').onchange=run;
+$('#draw').onclick=()=>{pts=[];$('#msg').textContent='Haz clic en dos esquinas opuestas.';map.on('click',pick)};
+function pick(e){pts.push([e.latlng.lat,e.latlng.lng]);if(pts.length<2)return;map.off('click',pick);drawn=rect(pts);$('#aoi').value='draw';$('#msg').textContent='';run()}
+$('#exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([Harmonize.csv(lastEv)],{type:'text/csv'}));a.download='incendios_armonizados.csv';a.click()};
+const q=new URLSearchParams(location.search).get('chacra');if(q&&farms().some(c=>String(c.id)===q))$('#aoi').value='f'+q;
+run();
+</script><footer class="foot">Datos: NASA FIRMS · NASA POWER · NASA GIBS · Open-Meteo. Proyecto para el NASA Space Apps Challenge 2026. Valores agronómicos de referencia: validar con INIA o un agrónomo.</footer></body></html>

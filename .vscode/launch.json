@@ -1,0 +1,13 @@
+d{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "🚀 Lanzar ASTROFIRE",
+            "url": "http://127.0.0.1:5500/index.html",
+            "webRoot": "${workspaceFolder}",
+            "userDataDir": true
+        }
+    ]
+}

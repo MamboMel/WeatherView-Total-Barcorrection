@@ -1,0 +1,447 @@
+<!-- <!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal agroproductor · ASTROFIRE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/weather-panel.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{--bg-0:#030710;--bg-1:#071222;--bg-2:#122848;--ink:#eaf2ff;--muted:#8ea1bb;--faint:#5d7190;--panel:rgba(9,18,34,.86);--surface:rgba(255,255,255,.035);--surface-hi:rgba(255,255,255,.06);--line:rgba(150,180,220,.14);--line-hi:rgba(150,180,220,.28);--cyan:#63d8ff;--mint:#55e0b5;--orange:#ff9a62;--red:#ff6b5e;--r-md:14px;--r-sm:10px;--display:'Space Grotesk',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}[hidden]{display:none!important}
+body{min-height:100vh;color:var(--ink);font:15px/1.5 'DM Sans',system-ui,sans-serif;background:radial-gradient(circle at 70% 0,var(--bg-2),var(--bg-1) 40%,var(--bg-0) 85%) fixed}
+h1,h2,h3{font-family:var(--display);font-weight:600}h2{font-size:1.05rem;margin-bottom:12px}h3{font-size:.95rem}
+.muted{color:var(--muted);font-size:.85rem}a{color:var(--cyan)}
+header{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line)}
+nav{display:flex;gap:8px;flex-wrap:wrap}nav button,nav a{width:auto;padding:7px 14px;border-radius:999px;font-size:.85rem;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:20px;display:grid;gap:16px}@media(min-width:900px){.two{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:18px}
+label{display:block;margin:10px 0 4px;color:var(--muted);font-size:.8rem}
+input,select,.btn{font:inherit;color:var(--ink);background:#0b192d;border:1px solid var(--line-hi);border-radius:var(--r-sm);padding:10px 12px;width:100%;min-height:42px}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:6px;background:var(--cyan);color:#041525;font-weight:600;border:0;cursor:pointer;text-decoration:none;margin-top:10px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-hi)}.btn:disabled{opacity:.4;cursor:not-allowed}
+:is(input,select,button,a):focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.auth{max-width:380px;margin:8vh auto;padding:0 20px}.gps{font-family:var(--display);font-size:1.05rem;margin:6px 0}
+#farmMap{position:relative;overflow:hidden;width:100%;height:330px;border:1px solid var(--line);border-radius:var(--r-sm);margin-top:10px;background:#0b192d;z-index:1}.leaflet-container{font:inherit}.leaflet-control-attribution{font-size:9px}
+ol{padding-left:20px;margin:8px 0;color:var(--muted);font-size:.82rem}.row{display:flex;gap:8px}.row>*{flex:1}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.chip{padding:4px 10px;border:1px solid var(--line-hi);border-radius:999px;font-size:.78rem}
+.rec{display:flex;gap:10px;margin-top:8px;font-size:.88rem}.dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:7px}.ok{background:var(--mint)}.warn{background:var(--orange)}.bad{background:var(--red)}
+.msg{color:var(--orange);font-size:.82rem;min-height:1.2em;margin-top:6px}.bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;margin:2px 0 8px}.bar i{display:block;height:100%;border-radius:3px;background:var(--mint)}
+.weather-monitor{position:static;width:auto;max-height:none}
+.mobile-nav{display:none}.mobile-view{min-width:0}.section-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.empty-state{text-align:center;padding:34px 12px 24px}.empty-icon{width:48px;height:48px;display:grid;place-items:center;margin:0 auto 12px;border:1px solid rgba(85,224,181,.35);border-radius:50%;color:var(--mint);font-size:1.4rem}.status-dot{display:block;width:10px;height:10px;margin-top:7px;border-radius:50%}.profile-row{display:flex;align-items:center;gap:12px;padding:12px 0 18px}.profile-avatar{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:rgba(99,216,255,.16);border:1px solid rgba(99,216,255,.35);color:var(--cyan);font-family:var(--display);font-weight:700}.profile-note{padding:12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}.mobile-logout{width:100%;margin-top:14px}
+@media(max-width:899px){
+ html,body{overflow-x:hidden}body{padding-bottom:calc(76px + env(safe-area-inset-bottom));overscroll-behavior-y:contain}.wrap{width:100%;padding:12px 12px 18px;display:block}.wrap>*{width:100%}header{padding:12px 14px;gap:8px}header h1{font-size:1rem}.auth{margin:7vh auto;padding:0 16px}.auth h1{font-size:1.5rem}nav:not(.mobile-nav){gap:4px}header nav a,header nav button{display:none}.card{padding:14px;border-radius:12px}.two{display:block!important}.two>.card{margin-bottom:14px}.two>#list{display:block}.gps{font-size:.86rem}.leaflet-container{touch-action:pan-x pan-y}.leaflet-marker-icon{touch-action:none}.mobile-nav{position:fixed;display:flex;z-index:1000;left:0;right:0;bottom:0;min-height:64px;padding:7px 8px calc(7px + env(safe-area-inset-bottom));justify-content:space-around;gap:4px;background:rgba(5,11,22,.96);border-top:1px solid var(--line-hi);backdrop-filter:blur(14px)}.mobile-nav-item{display:flex;flex:1;min-width:48px;min-height:48px;padding:5px 3px;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer}.mobile-nav-item span{font-size:1.15rem;line-height:1}.mobile-nav-item small{font-size:.65rem}.mobile-nav-item.active{background:rgba(99,216,255,.13);color:var(--cyan)}#farmMap{height:54vh;min-height:280px;max-height:480px}.row{display:block}.row>*{width:100%}.weather-monitor{width:100%}.weather-point-list{max-height:none}.mobile-view{min-height:50vh}.mobile-view h2{margin-bottom:4px}
+}
+@media(min-width:900px){.mobile-nav{display:none!important}.mobile-view{max-width:720px;margin:0 auto}}
+</style><meta name="theme-color" content="#071222"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-color='%23ff9a62'/%3E%3Cstop offset='1' stop-color='%2363d8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='url(%23g)' stroke-width='5'/%3E%3C/svg%3E"><link rel="stylesheet" href="css/ui.css"></head><body><a class="skip" href="#main">Saltar al contenido</a>
+<main class="auth" id="auth"><section class="hero"><span class="eyebrow">NASA Space Apps 2026</span><h1>Tu chacra, datos de la NASA, <em>un solo plan</em></h1>
+<p class="lead">Registra tu terreno y combina el calendario de fuego, el clima y tus prioridades para decidir qué sembrar y cuándo.</p>
+<ul class="feat"><li data-i="🔥"><b>Fuego armonizado</b><span>MODIS + VIIRS en un calendario por área de interés</span></li><li data-i="🌾"><b>Rotación con datos NASA</b><span>Plan de 3 temporadas con NASA POWER, NDVI y tus prioridades</span></li><li data-i="✦"><b>Asistente con fuentes</b><span>Respuestas que citan fichas de cultivo y datos de tu chacra</span></li></ul>
+<button type="button" class="btn" id="demo" style="max-width:340px">Probar con una chacra de ejemplo</button>
+<div class="chips"><span class="chip">NASA POWER</span><span class="chip">NASA FIRMS</span><span class="chip">NASA GIBS</span></div></section><div>
+<form class="card" id="authForm" style="margin-top:16px"><h2 id="authTitle">Iniciar sesión</h2>
+<label for="email">Correo</label><input id="email" type="email" autocomplete="email" required>
+<label for="pass">Contraseña</label><input id="pass" type="password" minlength="6" autocomplete="current-password" required>
+<p class="msg" id="authMsg" role="alert"></p><button class="btn" style="width:100%">Entrar</button>
+<button type="button" class="btn ghost" id="toggle" style="width:100%">Crear una cuenta nueva</button></form>
+<p class="muted" style="margin-top:12px"><a href="index.html">Volver al mapa de incendios</a></p></div></main>
+
+<div id="app" hidden>
+<header><h1><b>ASTROFIRE</b><span class="sub">Portal agro</span></h1>
+<nav><button class="btn" data-tab="chacras">Mis chacras</button><button class="btn ghost" data-tab="clima">Clima Perú</button><button class="btn ghost" data-tab="rotacion">Rotación</button><a class="btn ghost" href="fuego.html">Calendario de fuego</a><a class="btn ghost" href="index.html">Mapa de incendios</a><button class="btn ghost" id="logout">Salir</button></nav></header>
+<div class="wrap" id="main">
+<section id="tab-chacras" class="two">
+<div class="card"><h2>Registrar una chacra</h2>
+<label for="cName">Nombre de la chacra</label><input id="cName" maxlength="40" placeholder="Ej. Chacra del cerro">
+<label>Ubicación de la chacra</label><p class="gps" id="gps">Obteniendo ubicación para centrar el mapa…</p>
+<div id="farmMap" aria-label="Mapa para seleccionar las cuatro esquinas de la chacra"></div>
+<p style="margin-top:12px"><strong id="step">Haz clic en el mapa para marcar la esquina 1 de 4</strong></p><p class="muted">Selecciona cuatro esquinas. Puedes arrastrar los marcadores para corregirlas; el polígono y el área se actualizarán automáticamente.</p>
+<ol id="cornerList"></ol><p class="msg" id="cornerMsg" role="alert"></p>
+<button class="btn ghost" id="resetCorners" style="width:100%">Borrar esquinas</button>
+<div id="cropBox" hidden><p id="areaOut" style="margin-top:14px"></p>
+<label for="crop">Cultivo</label><select id="crop"></select>
+<label for="sown">Fecha de siembra</label><input id="sown" type="date">
+<button class="btn" id="saveChacra" style="width:100%">Guardar chacra</button></div></div>
+<div id="list"></div></section>
+<section id="tab-clima" hidden><section class="weather-monitor" aria-label="Temperatura y pronóstico del Perú">
+<div class="weather-monitor-header"><div><h4>Clima · Perú</h4><p id="weatherStatus">Consultando temperatura…</p></div><span class="weather-source">Open-Meteo</span></div>
+<label class="weather-select-label" for="weatherPoint">Punto de monitoreo</label><select id="weatherPoint" class="weather-select"></select>
+<div id="weatherDetails" class="weather-details"><p class="weather-empty">Cargando condiciones actuales…</p></div><div class="weather-point-list" id="weatherPointList"></div></section></section>
+<section id="tab-rotacion" hidden><div class="card"><h2>Plan de rotación (3 temporadas)</h2><p class="muted">Combina NASA POWER, el riesgo de fuego del entorno y tus prioridades. Valores agronómicos de referencia: valídalos con INIA o un agrónomo.</p>
+<label for="rChacra">Chacra</label><select id="rChacra"></select>
+<div class="row"><div><label for="rH1">Cultivo anterior</label><select id="rH1"></select></div><div><label for="rH2">Hace 2 temporadas</label><select id="rH2"></select></div></div>
+<div class="row"><div><label for="rOM">Materia orgánica del suelo</label><select id="rOM"><option value="bajo">Baja</option><option value="medio" selected>Media</option><option value="alto">Alta</option></select></div><div><label><input id="rRiego" type="checkbox" style="width:auto;min-height:0"> Tengo riego disponible</label></div></div>
+<h3 style="margin-top:14px">Tus prioridades (0–5)</h3>
+<label for="wI">Ingreso</label><input id="wI" type="range" min="0" max="5" value="3"><label for="wA">Ahorro de agua</label><input id="wA" type="range" min="0" max="5" value="2"><label for="wS">Salud del suelo</label><input id="wS" type="range" min="0" max="5" value="4"><label for="wR">Bajo riesgo (clima y fuego)</label><input id="wR" type="range" min="0" max="5" value="3">
+<button class="btn" id="rGo" style="width:100%">Generar plan</button><div id="rOut" style="margin-top:14px"></div></div></section>
+<button class="btn fab" data-tab="asistente" aria-label="Abrir asistente">✦ Asistente</button>
+<section id="tab-asistente" hidden><div class="card"><h2>Asistente de la chacra <span class="chip" id="aMode" style="margin:0 0 0 auto">✦ API Gemini</span></h2><p class="muted">Responde con las fichas de cultivos, la rotación, el calendario de fuego y los datos de tu chacra. Cada respuesta cita sus fuentes.</p>
+<label for="aChacra">Chacra</label><select id="aChacra"></select>
+<div class="row" style="margin-top:8px"><button class="btn ghost sug">¿En qué etapa está mi cultivo y cuánta agua necesita?</button><button class="btn ghost sug">¿Qué sembrar después de mi cultivo?</button><button class="btn ghost sug">¿Debo quemar el rastrojo?</button><button class="btn ghost sug">¿De dónde salen estos datos?</button></div>
+<div id="aLog" class="ai-log" aria-live="polite"><div class="ai-msg bot">Hola, soy el asistente de tu chacra. Pregunta por riego, rotación o fuego: cito mis fuentes y no invento datos.</div></div>
+<div class="row"><input id="aQ" placeholder="Pregunta sobre riego, rotación o fuego…" aria-label="Tu pregunta" style="flex:3"><button class="btn" id="aSend">Enviar</button></div></div></section>
+<section id="tab-alertas" class="mobile-view" hidden><div class="card"><div class="section-heading"><div><h2>Tu entorno en vivo</h2><p class="muted">Focos de calor MODIS/VIIRS a menos de 10 km de tus chacras (últimas 24 h).</p></div></div><div id="alertMap" style="height:300px;border-radius:12px;margin-bottom:12px"></div><div id="alertList"><div class="skel"></div></div></div></section>
+<section id="tab-perfil" class="mobile-view" hidden><div class="card"><div class="section-heading"><div><h2>Mi perfil</h2><p class="muted">Cuenta local del portal agroproductor.</p></div></div><div class="profile-row"><span class="profile-avatar">AG</span><div><strong id="profileEmail">Productor</strong><p class="muted">Productor agrícola</p></div></div><div class="profile-note"><strong>Modo demostración</strong><p class="muted">Tus datos se guardan únicamente en este navegador.</p></div><button class="btn ghost mobile-logout" id="mobileLogout">Cerrar sesión</button></div></section>
+ </div><nav class="mobile-nav" aria-label="Navegación móvil"><button class="mobile-nav-item active" data-tab="chacras"><span>⌂</span><small>Chacras</small></button><button class="mobile-nav-item" data-tab="mapa"><span>⌖</span><small>Mapa</small></button><button class="mobile-nav-item" data-tab="clima"><span>☼</span><small>Clima</small></button><button class="mobile-nav-item" data-tab="rotacion"><span>⟳</span><small>Rotación</small></button><button class="mobile-nav-item" data-tab="alertas"><span>!</span><small>Alertas</small></button><button class="mobile-nav-item" data-tab="perfil"><span>◉</span><small>Perfil</small></button></nav></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/crops.js"></script><script src="js/weather.js"></script><script src="js/config.local.js"></script><script src="js/config.js"></script><script src="js/harmonize.js"></script><script src="js/api.js"></script><script src="js/rotation.js"></script><script>window.RAG_ENDPOINT=window.RAG_ENDPOINT||'https://8787-imjp2htsdu8a4d4u7tf8t-6efa9624.us3.manus.computer/'</script><script src="js/rag.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const db=()=>JSON.parse(localStorage.getItem('agro_users')||'{}'),put=u=>localStorage.setItem('agro_users',JSON.stringify(u));
+let mode='login',me=null,pos=null,corners=[],lastMap=null,watch=null,climaLoaded=false,farmMap=null,farmPolygon=null,farmMarkers=[];
+const hash=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(x=>x.toString(16).padStart(2,'0')).join('');
+const K=111320,dist=(a,b)=>Math.hypot((a.lng-b.lng)*K*Math.cos(a.lat*Math.PI/180),(a.lat-b.lat)*K);
+const area=c=>{const o=c[0],xy=c.map(p=>[(p.lng-o.lng)*K*Math.cos(o.lat*Math.PI/180),(p.lat-o.lat)*K]);let a=0;xy.forEach((p,i)=>{const q=xy[(i+1)%xy.length];a+=p[0]*q[1]-q[0]*p[1]});return Math.abs(a)/2/1e4};
+const center=c=>({lat:c.reduce((s,p)=>s+p.lat,0)/c.length,lng:c.reduce((s,p)=>s+p.lng,0)/c.length});
+// --- Login / registro (cuentas guardadas solo en este navegador) ---
+$('#toggle').onclick=()=>{mode=mode==='login'?'register':'login';$('#authTitle').textContent=mode==='login'?'Iniciar sesión':'Crear cuenta';$('#toggle').textContent=mode==='login'?'Crear una cuenta nueva':'Ya tengo cuenta';$('#authMsg').textContent=''};
+$('#authForm').onsubmit=async e=>{e.preventDefault();const em=$('#email').value.trim().toLowerCase(),h=await hash($('#pass').value),u=db(),m=$('#authMsg');
+ if(mode==='register'){if(u[em]){m.textContent='Ese correo ya tiene una cuenta. Inicia sesión.';return}u[em]={h,chacras:[]};put(u)}
+ else if(!u[em]){m.textContent='No existe una cuenta en este navegador. Pulsa “Crear una cuenta nueva” para registrarte.';return}
+ else if(u[em].h!==h){m.textContent='La contraseña no coincide con la cuenta registrada en este navegador.';return}
+ localStorage.setItem('agro_session',em);enter(em)};
+$('#logout').onclick=()=>{localStorage.removeItem('agro_session');location.reload()};
+function enter(em){me=em;$('#auth').hidden=true;$('#app').hidden=false;$('#profileEmail').textContent=em;$('#crop').innerHTML=CROPS.map(c=>`<option value="${c.id}">${c.n}</option>`).join('');$('#sown').max=new Date().toISOString().slice(0,10);initFarmMap();startGPS();drawCorners();renderList()}
+function showMobileTab(tab){
+ const view=tab==='mapa'?'chacras':tab;
+ ['chacras','clima','rotacion','asistente','alertas','perfil'].forEach(id=>{const node=$('#tab-'+id);if(node)node.hidden=id!==view});
+ document.querySelectorAll('.mobile-nav-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ document.querySelectorAll('header [data-tab]').forEach(b=>b.classList.toggle('ghost',b.dataset.tab!==view));
+ if(tab==='clima'&&!climaLoaded){climaLoaded=true;peruWeatherMonitor.init()}
+ if(tab==='rotacion')fillRot();
+ if(tab==='alertas')renderAlerts();
+ if(tab==='asistente')fillAsk();
+ if(tab==='mapa')setTimeout(()=>{$('#farmMap')?.scrollIntoView({behavior:'smooth',block:'center'});farmMap?.invalidateSize()},80);
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>showMobileTab(b.dataset.tab));
+$('#mobileLogout').onclick=()=>$('#logout').click();
+// --- Mapa interactivo y selección poligonal del terreno ---
+function initFarmMap(){
+ if(farmMap||typeof L==='undefined')return;
+ farmMap=L.map('farmMap',{zoomControl:true}).setView([-9.19,-75.015],6);
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(farmMap);
+ L.control.layers(null,{'NDVI (vigor de la vegetación)':gibs()}).addTo(farmMap);
+ farmMap.getContainer().style.cursor='crosshair';
+ farmMap.on('click',e=>{
+  if(corners.length>=4)return say('Ya seleccionaste las 4 esquinas. Arrastra los marcadores para corregirlas.');
+  corners.push({lat:e.latlng.lat,lng:e.latlng.lng});say('');drawCorners();
+ });
+ const resizeObserver=new ResizeObserver(()=>farmMap.invalidateSize());
+ resizeObserver.observe(document.getElementById('farmMap'));
+ requestAnimationFrame(()=>farmMap.invalidateSize());
+}
+function startGPS(){if(!navigator.geolocation){$('#gps').textContent='GPS no disponible. Selecciona las esquinas manualmente en el mapa.';return}
+ watch=navigator.geolocation.watchPosition(p=>{pos=p.coords;const a={lat:pos.latitude,lng:pos.longitude};$('#gps').textContent=`Mapa centrado en tu ubicación · ±${Math.round(pos.accuracy)} m`;
+  if(farmMap&&!lastMap){lastMap=a;farmMap.setView([a.lat,a.lng],17)}},
+ e=>{$('#gps').textContent='No pudimos leer tu ubicación. Puedes seleccionar las esquinas manualmente en el mapa.'},{enableHighAccuracy:true,maximumAge:2000})}
+const say=t=>$('#cornerMsg').textContent=t;
+function renderFarmGeometry(){
+ if(!farmMap)return;
+ farmMarkers.forEach(m=>m.remove());farmMarkers=[];
+ corners.forEach((p,i)=>{const marker=L.marker([p.lat,p.lng],{draggable:true,title:`Esquina ${i+1}`}).addTo(farmMap);marker.bindTooltip(`Esquina ${i+1}`,{permanent:true,direction:'top',offset:[0,-8]});marker.on('dragend',e=>{const q=e.target.getLatLng();corners[i]={lat:q.lat,lng:q.lng};say('');drawCorners()});farmMarkers.push(marker)});
+ if(farmPolygon)farmPolygon.remove();
+ if(corners.length>=2)farmPolygon=L.polygon(corners.map(p=>[p.lat,p.lng]),{color:'#63d8ff',weight:3,fillColor:'#63d8ff',fillOpacity:.2}).addTo(farmMap);
+}
+function drawCorners(){const n=corners.length,done=n===4;$('#step').textContent=done?'Las 4 esquinas están registradas':`Haz clic en el mapa para marcar la esquina ${n+1} de 4`;$('#cornerList').innerHTML=corners.map((p,i)=>`<li>Esquina ${i+1}: ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}</li>`).join('');$('#cropBox').hidden=!done;if(done)$('#areaOut').textContent=`Superficie poligonal aproximada: ${area(corners).toFixed(2)} ha`;renderFarmGeometry()}
+$('#resetCorners').onclick=()=>{corners=[];say('');drawCorners()};
+$('#saveChacra').onclick=()=>{const n=$('#cName').value.trim(),d=$('#sown').value;if(!n||!d)return say('Escribe el nombre de la chacra y la fecha de siembra.');
+ const u=db();u[me].chacras.push({id:Date.now(),name:n,crop:$('#crop').value,sown:d,corners,ha:area(corners)});put(u);corners=[];$('#cName').value='';drawCorners();renderList()};
+function del(id){if(!confirm('¿Eliminar esta chacra?'))return;const u=db();u[me].chacras=u[me].chacras.filter(c=>c.id!==id);put(u);renderList()}
+// --- Chacras, clima de Open-Meteo y recomendaciones ---
+function renderList(){const L=db()[me].chacras;$('#list').innerHTML=L.length?L.map(c=>{const k=CROPS.find(x=>x.id===c.crop);return `<article class="card" style="margin-bottom:16px"><h3>${esc(c.name)}</h3><p class="muted">${k.n} · ${c.ha.toFixed(2)} ha · sembrada el ${esc(c.sown)}</p><div id="adv${c.id}"><p class="muted">Consultando el clima de tu terreno…</p></div><a class="btn ghost" href="fuego.html?chacra=${c.id}">Calendario de fuego</a><button class="btn ghost" onclick="del(${c.id})">Eliminar</button></article>`}).join(''):'<div class="card"><h2>Mis chacras</h2><p class="muted">Aún no registraste ninguna. Selecciona las 4 esquinas de tu terreno para empezar.</p></div>';L.forEach(refresh)}
+async function weather(p){const q=new URLSearchParams({latitude:p.lat.toFixed(4),longitude:p.lng.toFixed(4),current:'temperature_2m,relative_humidity_2m',hourly:'soil_moisture_3_to_9cm',daily:'precipitation_sum,et0_fao_evapotranspiration',forecast_days:'3',timezone:'auto'});const r=await fetch('https://api.open-meteo.com/v1/forecast?'+q);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+async function refresh(c){const box=$('#adv'+c.id);try{box.innerHTML=advice(CROPS.find(x=>x.id===c.crop),c,await weather(center(c.corners)))}catch(e){box.innerHTML=`<p class="msg">No pudimos consultar Open-Meteo (${esc(e.message)}). Revisa tu conexión.</p>`}}
+function advice(k,c,d){const T=d.current.temperature_2m,RH=d.current.relative_humidity_2m,x=d.daily,age=Math.floor((Date.now()-new Date(c.sown+'T00:00:00'))/864e5);
+ const i=d.hourly.time.findIndex(t=>t>=d.current.time),sm=d.hourly.soil_moisture_3_to_9cm?.[i],rain0=x.precipitation_sum[0]||0,rain48=rain0+(x.precipitation_sum[1]||0);
+ const st=age<0?null:k.st.find(s=>age<=s[0])||k.st[k.st.length-1],need=st?Math.max(0,(x.et0_fao_evapotranspiration[0]||0)*st[2]-rain0):0,r=[];
+ if(!st)r.push(['ok',`La siembra está programada en ${-age} día(s).`]);
+ else if(rain48>=5)r.push(['ok',`Se esperan ${rain48.toFixed(1)} mm de lluvia en 48 h: pospón el riego.`]);
+ else if((T>k.t[1]&&RH<k.rh)||(sm!=null&&sm<.15)||(RH<k.rh&&need>3))r.push(['warn',`Riega hoy, al atardecer o de madrugada. Hay ${T.toFixed(0)}°C y ${RH.toFixed(0)}% de humedad. Repón unos ${need.toFixed(1)} mm (≈ ${(need*10*c.ha).toFixed(0)} m³ para ${c.ha.toFixed(2)} ha).`]);
+ else r.push(['ok','Humedad y temperatura normales: hoy no hace falta regar.']);
+ if(T>k.t[1]+4)r.push(['bad',`Calor extremo para ${k.n} (ideal ${k.t[0]}–${k.t[1]}°C): evita labores al sol y protege el cultivo.`]);
+ else if(T>k.t[1])r.push(['warn',`Temperatura sobre el rango ideal de ${k.n} (${k.t[0]}–${k.t[1]}°C): vigila el estrés por calor.`]);
+ if(T<=4)r.push(['bad','Riesgo de helada: protege el cultivo (cobertura o riego ligero previo) y revisa el pronóstico de la madrugada.']);
+ else if(T<k.t[0])r.push(['warn',`Frío para ${k.n} (ideal ${k.t[0]}–${k.t[1]}°C): el crecimiento será más lento.`]);
+ if(RH>85&&T>=10&&T<=25)r.push(['warn','Humedad muy alta con temperaturas templadas: vigila hongos y enfermedades foliares.']);
+ if(st&&st[2]>=1.1)r.push(['warn',`Etapa de mayor demanda de agua (${st[1]}): evita que el suelo se seque.`]);
+ return `<div class="chips"><span class="chip">${T.toFixed(1)}°C</span><span class="chip">Humedad ${RH.toFixed(0)}%</span>${sm!=null?`<span class="chip">Suelo ${(sm*100).toFixed(0)}%</span>`:''}<span class="chip">${st?`${st[1]} · día ${age}`:'Sin sembrar'}</span></div>`+r.map(([c,t])=>`<div class="rec"><i class="dot ${c}"></i><span>${t}</span></div>`).join('')+'<div style="height:12px"></div>'}
+function fillRot(){const L=db()[me].chacras,o=CROPS.filter(k=>TRAITS[k.id]).map(k=>`<option value="${k.id}">${k.n}</option>`).join('');
+ $('#rChacra').innerHTML=L.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');$('#rH1').innerHTML=$('#rH2').innerHTML='<option value="">—</option>'+o}
+async function runRotation(){
+ const c=db()[me].chacras.find(x=>String(x.id)===$('#rChacra').value),out=$('#rOut');
+ if(!c){out.innerHTML='<p class="muted">Registra una chacra primero.</p>';return}
+ out.innerHTML='<p class="muted">Consultando NASA POWER y el histórico de fuego…</p>';
+ const ctr=center(c.corners),[clim0,w0,hh,tr]=await Promise.all([Rotation.climate(ctr.lat,ctr.lng),weather(ctr).catch(()=>null),Harmonize.history(Harmonize.farmPoly(c)),Rotation.trend(ctr.lat,ctr.lng)]),clim=clim0&&{...clim0,t:clim0.t+(tr?tr.dT*.5:0)},cal=Harmonize.calendar(hh.events);
+ const x={clim,elev:w0?.elevation,om:$('#rOM').value,riego:$('#rRiego').checked,sow:new Date(),fire:{critical:cal.critical}},hs=[c.crop,$('#rH1').value,$('#rH2').value].filter(Boolean);
+ const SC=[['Tus prioridades',{suelo:+$('#wS').value,agua:+$('#wA').value,ingreso:+$('#wI').value,clima:+$('#wR').value}],['Máximo ingreso',{suelo:1,agua:1,ingreso:5,clima:1}],['Máxima salud del suelo',{suelo:5,agua:1,ingreso:1,clima:1}]];
+ const nm=id=>CROPS.find(k=>k.id===id).n,avg=(pl,k)=>pl.reduce((s,p)=>s+p.s[k],0)/pl.length,bar=(l,v)=>`<small class="muted">${l} ${v.toFixed(0)}</small><div class="bar"><i style="width:${v}%"></i></div>`;
+ out.innerHTML=(tr?trendCard(tr):'')+SC.map(([t,w])=>{const pl=Rotation.plan(w,hs,x);return `<article class="card" style="margin-bottom:12px"><div class="sc-h"><h3>${t}</h3>${t==='Tus prioridades'?'<span class="chip ok2">Recomendado</span>':''}<span class="score" title="Puntaje promedio (0–100)">${Math.round(['suelo','agua','ingreso','clima'].reduce((x,k)=>x+avg(pl,k),0)/4)}</span></div><p><b>${pl.map(p=>nm(p.id)).join(' → ')}</b></p>${timeline(pl,cal)}${bar('Suelo',avg(pl,'suelo'))}${bar('Agua',avg(pl,'agua'))}${bar('Ingreso (ilustrativo)',avg(pl,'ingreso'))}${bar('Clima y riesgo',avg(pl,'clima'))}${pl.filter(p=>p.s.fuego).map(p=>`<div class="rec"><i class="dot warn"></i><span>${nm(p.id)}: la cosecha cae en una semana crítica de fuego (${cal.critical.map(Harmonize.label).join(', ')}). Incorpora el rastrojo; no lo quemes.</span></div>`).join('')}</article>`}).join('')
+  +`<p class="muted">Clima: ${clim?'NASA POWER':'sin datos POWER (puntaje neutro)'} · Fuego: ${hh.real?'FIRMS real':'histórico SIMULADO'} · Elevación: ${x.elev??'s/d'} m (Open-Meteo)</p>`;
+}
+const spark=(yrs,k,l,u,d)=>{const v=yrs.map(o=>o[k]),lo=Math.min(...v),hi=Math.max(...v),pts=v.map((a,i)=>`${(i/(v.length-1)*300).toFixed(1)},${(50-(a-lo)/((hi-lo)||1)*46).toFixed(1)}`).join(' ');
+ return `<div style="margin:8px 0"><small class="muted">${l}: ${d>=0?'+':''}${d.toFixed(k==='t'?2:0)} ${u} por década</small><svg viewBox="0 0 300 54" width="100%" height="54" role="img" aria-label="${l} ${yrs[0].y}–${yrs.at(-1).y}"><polyline points="${pts}" fill="none" style="stroke:var(--cyan)" stroke-width="2"/></svg></div>`};
+const trendCard=tr=>`<article class="card" style="margin-bottom:12px"><h3>Cómo cambió tu clima</h3>${spark(tr.yrs,'t','Temperatura media anual','°C',tr.dT)}${spark(tr.yrs,'rain','Lluvia anual','mm',tr.dRain)}<p class="muted">NASA POWER ${tr.yrs[0].y}–${tr.yrs.at(-1).y}. El plan usa la temperatura proyectada a ~5 años.</p></article>`;
+const timeline=(pl,cal)=>{const D=pl.reduce((s,p)=>s+TRAITS[p.id].ciclo,0),t0=+pl[0].sow;let h='',a=0;
+ for(let d=0;d<D;d+=7)if(cal.critical.includes(Harmonize.week(new Date(t0+d*864e5).toISOString().slice(0,10))))h+=`<u style="left:${d/D*100}%;width:${7/D*100}%" title="Semana crítica de fuego"></u>`;
+ pl.forEach(p=>{const c=TRAITS[p.id].ciclo;h+=`<b style="left:${a/D*100}%;width:${c/D*100-.5}%">${CROPS.find(k=>k.id===p.id).n}</b>`;a+=c});
+ return `<div class="tl" role="img" aria-label="Línea de tiempo de rotación con semanas críticas de fuego">${h}</div><small class="muted">Franjas naranjas: semanas críticas de fuego</small>`};
+$('#rGo').onclick=runRotation;
+function gibs(){const d=new Date(Date.now()-24*864e5),doy=Math.floor((d-Date.UTC(d.getUTCFullYear(),0,1))/864e5);d.setUTCDate(d.getUTCDate()-doy%8);
+ return L.tileLayer(`https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/${d.toISOString().slice(0,10)}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png`,{subdomains:'abc',maxNativeZoom:9,maxZoom:19,opacity:.7,noWrap:true,attribution:'NDVI: NASA EOSDIS GIBS'})}
+let am,amLayer;
+async function renderAlerts(){const box=$('#alertList'),F=db()[me].chacras,SN={MV:'MODIS+VIIRS',M:'MODIS',V:'VIIRS'};
+ if(!am){am=L.map('alertMap').setView([-9.2,-75],5);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(am);L.control.layers(null,{'NDVI MODIS (NASA GIBS)':gibs()}).addTo(am)}
+ setTimeout(()=>am.invalidateSize(),60);if(amLayer)amLayer.remove();amLayer=L.layerGroup().addTo(am);
+ if(!F.length){box.innerHTML='<p class="muted">Registra una chacra para ver tu entorno y recibir alertas.</p>';return}
+ F.forEach(c=>{const o=center(c.corners);L.polygon(c.corners.map(p=>[p.lat,p.lng]),{color:'#55e0b5'}).addTo(amLayer);L.circle([o.lat,o.lng],{radius:1e4,color:'#63d8ff',weight:1,fillOpacity:.04}).addTo(amLayer)});
+ am.fitBounds(L.featureGroup(amLayer.getLayers()).getBounds().pad(.3));
+ box.innerHTML='<div class="skel"></div><div class="skel"></div>';
+ const fires=await nasaAPI.fetchRealFireData();
+ if(nasaAPI.mode!=='REAL'){box.innerHTML='<p class="msg">Sin conexión a NASA FIRMS (falta la clave en js/config.local.js): se muestran tus chacras, sin focos.</p>';return}
+ const near=f=>F.map(c=>dist({lat:f.latitude,lng:f.longitude},center(c.corners)));
+ fires.filter(f=>Math.min(...near(f))<5e4).forEach(f=>L.circleMarker([f.latitude,f.longitude],{radius:4,color:'#ff9a62',weight:1,fillOpacity:.8}).bindPopup(`${SN[f.sensors]} · ${esc(f.acq_date)} ${esc(f.acq_time)} UTC`).addTo(amLayer));
+ const hits=F.flatMap(c=>fires.map(f=>({c,f,d:dist({lat:f.latitude,lng:f.longitude},center(c.corners))})).filter(h=>h.d<=1e4)).sort((a,b)=>a.d-b.d);
+ box.innerHTML=hits.length?hits.map(h=>`<div class="rec fade"><i class="dot bad"></i><span><b>${esc(h.c.name)}</b>: foco a ${(h.d/1000).toFixed(1)} km · ${SN[h.f.sensors]} · ${esc(h.f.acq_date)} ${esc(h.f.acq_time)} UTC</span></div>`).join(''):'<div class="empty-state"><div class="empty-icon">✓</div><h3>Sin focos cerca</h3><p class="muted">No hay detecciones a menos de 10 km de tus chacras.</p></div>'}
+let askDocs=[],askCtx=null;
+async function loadAskCtx(){const c=db()[me].chacras.find(x=>String(x.id)===$('#aChacra').value);askCtx=c||null;let ex=[];
+ if(c){const o=center(c.corners),[w,hh]=await Promise.all([weather(o).catch(()=>null),Harmonize.history(Harmonize.farmPoly(c))]);ex=Rag.context(c,w,Harmonize.calendar(hh.events))}
+ askDocs=Rag.kb(ex)}
+async function fillAsk(){$('#aChacra').innerHTML=db()[me].chacras.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')||'<option value="">Sin chacras</option>';await loadAskCtx();$('#aMode').textContent=window.RAG_ENDPOINT?'✦ API Gemini':'Offline · sin LLM';Rag.status().then(m=>{if(m)$('#aMode').textContent='✦ '+m})}
+const askHist=[];
+const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[(\d+)\]/g,'<sup class="cite">$1</sup>').replace(/(?:^|\n)[-*] (.+)/g,'\n<li>$1</li>').replace(/(<li>.*?<\/li>\n?)+/g,m=>`<ul>${m.replace(/\n/g,'')}</ul>`).replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
+async function sendAsk(q){q=(q||$('#aQ').value).trim();if(!q)return;$('#aQ').value='';const log=$('#aLog');log.querySelectorAll('.fu').forEach(b=>b.remove());
+ log.insertAdjacentHTML('beforeend',`<div class="ai-msg me fade">${esc(q)}</div>`);
+ const t=document.createElement('div');t.className='ai-msg bot';t.innerHTML='<div class="skel" style="width:140px"></div>';log.appendChild(t);log.scrollTop=log.scrollHeight;
+ if(!askDocs.length)await loadAskCtx();const r=await Rag.ask(q,askDocs,askCtx?.crop,askHist);t.remove();
+ askHist.push({role:'user',text:q},{role:'model',text:r.text});askHist.splice(0,Math.max(0,askHist.length-8));
+ const cs=(r.cited.length?r.cited:[1,2,3]).map(n=>[n,r.src[n-1]]).filter(x=>x[1]).slice(0,5);
+ log.insertAdjacentHTML('beforeend',`<div class="ai-msg bot fade">${md(r.text)}<div>${cs.map(([n,d])=>`<span class="chip">[${n}] ${esc(d.src)}</span>`).join('')}<small class="muted"> ${esc(r.mode)}</small></div>${r.followups.slice(0,3).map(f=>`<button type="button" class="chip fu">${esc(f)}</button>`).join('')}</div>`);
+ log.querySelectorAll('.fu').forEach(b=>b.onclick=()=>sendAsk(b.textContent));log.scrollTop=log.scrollHeight}
+$('#aSend').onclick=()=>sendAsk();$('#aQ').onkeydown=e=>{if(e.key==='Enter')sendAsk()};$('#aChacra').onchange=loadAskCtx;document.querySelectorAll('.sug').forEach(b=>b.onclick=()=>sendAsk(b.textContent));
+$('#demo').onclick=()=>{const em='demo@astrofire.pe',la=-8.38,lo=-74.55,d=.0007,corners=[{lat:la+d,lng:lo-d},{lat:la+d,lng:lo+d},{lat:la-d,lng:lo+d},{lat:la-d,lng:lo-d}],u=db();
+ u[em]={chacras:[{id:1,name:'Chacra demo · Pucallpa',crop:'maiz',sown:new Date(Date.now()-45*864e5).toISOString().slice(0,10),corners,ha:area(corners)}]};put(u);localStorage.setItem('agro_session',em);enter(em)};
+{const s=localStorage.getItem('agro_session');if(s&&db()[s])enter(s)}
+</script><footer class="foot">Datos: NASA FIRMS · NASA POWER · NASA GIBS · Open-Meteo. Proyecto para el NASA Space Apps Challenge 2026. Valores agronómicos de referencia: validar con INIA o un agrónomo.</footer></body></html>
+ -->
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal agroproductor · ASTROFIRE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/weather-panel.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{--bg-0:#030710;--bg-1:#071222;--bg-2:#122848;--ink:#eaf2ff;--muted:#8ea1bb;--faint:#5d7190;--panel:rgba(9,18,34,.86);--surface:rgba(255,255,255,.035);--surface-hi:rgba(255,255,255,.06);--line:rgba(150,180,220,.14);--line-hi:rgba(150,180,220,.28);--cyan:#63d8ff;--mint:#55e0b5;--orange:#ff9a62;--red:#ff6b5e;--r-md:14px;--r-sm:10px;--display:'Space Grotesk',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}[hidden]{display:none!important}
+body{min-height:100vh;color:var(--ink);font:15px/1.5 'DM Sans',system-ui,sans-serif;background:radial-gradient(circle at 70% 0,var(--bg-2),var(--bg-1) 40%,var(--bg-0) 85%) fixed}
+h1,h2,h3{font-family:var(--display);font-weight:600}h2{font-size:1.05rem;margin-bottom:12px}h3{font-size:.95rem}
+.muted{color:var(--muted);font-size:.85rem}a{color:var(--cyan)}
+header{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--line)}
+nav{display:flex;gap:8px;flex-wrap:wrap}nav .btn{width:auto;margin-top:0;padding:7px 14px;border-radius:999px;font-size:.85rem;text-decoration:none}
+.wrap{max-width:1100px;margin:0 auto;padding:20px;display:grid;gap:16px}@media(min-width:900px){.two{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:18px}
+label{display:block;margin:10px 0 4px;color:var(--muted);font-size:.8rem}
+input,select,.btn{font:inherit;color:var(--ink);background:#0b192d;border:1px solid var(--line-hi);border-radius:var(--r-sm);padding:10px 12px;width:100%;min-height:42px}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:6px;background:var(--cyan);color:#041525;font-weight:600;border:0;cursor:pointer;text-decoration:none;margin-top:10px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line-hi)}.btn:disabled{opacity:.4;cursor:not-allowed}
+:is(input,select,button,a):focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.auth{max-width:380px;margin:8vh auto;padding:0 20px}.gps{font-family:var(--display);font-size:1.05rem;margin:6px 0}
+#farmMap{position:relative;overflow:hidden;width:100%;height:330px;border:1px solid var(--line);border-radius:var(--r-sm);margin-top:10px;background:#0b192d;z-index:1}.leaflet-container{font:inherit}.leaflet-control-attribution{font-size:9px}
+ol{padding-left:20px;margin:8px 0;color:var(--muted);font-size:.82rem}.row{display:flex;gap:8px}.row>*{flex:1}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.chip{padding:4px 10px;border:1px solid var(--line-hi);border-radius:999px;font-size:.78rem}
+.rec{display:flex;gap:10px;margin-top:8px;font-size:.88rem}.dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:7px}.ok{background:var(--mint)}.warn{background:var(--orange)}.bad{background:var(--red)}
+.msg{color:var(--orange);font-size:.82rem;min-height:1.2em;margin-top:6px}.bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;margin:2px 0 8px}.bar i{display:block;height:100%;border-radius:3px;background:var(--mint)}
+.weather-monitor{position:static;width:auto;max-height:none}
+.mobile-nav{display:none}.mobile-view{min-width:0}.section-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.empty-state{text-align:center;padding:34px 12px 24px}.empty-icon{width:48px;height:48px;display:grid;place-items:center;margin:0 auto 12px;border:1px solid rgba(85,224,181,.35);border-radius:50%;color:var(--mint);font-size:1.4rem}.status-dot{display:block;width:10px;height:10px;margin-top:7px;border-radius:50%}.profile-row{display:flex;align-items:center;gap:12px;padding:12px 0 18px}.profile-avatar{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:rgba(99,216,255,.16);border:1px solid rgba(99,216,255,.35);color:var(--cyan);font-family:var(--display);font-weight:700}.profile-note{padding:12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}.mobile-logout{width:100%;margin-top:14px}
+@media(max-width:899px){
+ html,body{overflow-x:hidden}body{padding-bottom:calc(76px + env(safe-area-inset-bottom));overscroll-behavior-y:contain}.wrap{width:100%;padding:12px 12px 18px;display:block}.wrap>*{width:100%}header{padding:12px 14px;gap:8px}header h1{font-size:1rem}.auth{margin:7vh auto;padding:0 16px}.auth h1{font-size:1.5rem}nav:not(.mobile-nav){gap:4px}header nav .btn{display:none}.card{padding:14px;border-radius:12px}.two{display:block!important}.two>.card{margin-bottom:14px}.two>#list{display:block}.gps{font-size:.86rem}.leaflet-container{touch-action:pan-x pan-y}.leaflet-marker-icon{touch-action:none}.mobile-nav{position:fixed;display:flex;z-index:1000;left:0;right:0;bottom:0;min-height:64px;padding:7px 8px calc(7px + env(safe-area-inset-bottom));justify-content:space-around;gap:4px;background:rgba(5,11,22,.96);border-top:1px solid var(--line-hi);backdrop-filter:blur(14px)}.mobile-nav-item{display:flex;flex:1;min-width:48px;min-height:48px;padding:5px 3px;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer}.mobile-nav-item span{font-size:1.15rem;line-height:1}.mobile-nav-item small{font-size:.65rem}.mobile-nav-item.active{background:rgba(99,216,255,.13);color:var(--cyan)}#farmMap{height:54vh;min-height:280px;max-height:480px}.row{display:block}.row>*{width:100%}.weather-monitor{width:100%}.weather-point-list{max-height:none}.mobile-view{min-height:50vh}.mobile-view h2{margin-bottom:4px}
+}
+@media(min-width:900px){.mobile-nav{display:none!important}.mobile-view{max-width:720px;margin:0 auto}}
+</style><meta name="theme-color" content="#071222"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g'%3E%3Cstop offset='0' stop-color='%23ff9a62'/%3E%3Cstop offset='1' stop-color='%2363d8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='url(%23g)' stroke-width='5'/%3E%3C/svg%3E"><link rel="stylesheet" href="css/ui.css"></head><body><a class="skip" href="#main">Saltar al contenido</a>
+<main class="auth" id="auth"><section class="hero"><span class="eyebrow">NASA Space Apps 2026</span><h1>Tu chacra, datos de la NASA, <em>un solo plan</em></h1>
+<p class="lead">Registra tu terreno y combina el calendario de fuego, el clima y tus prioridades para decidir qué sembrar y cuándo.</p>
+<ul class="feat"><li data-i="🔥"><b>Fuego armonizado</b><span>MODIS + VIIRS en un calendario por área de interés</span></li><li data-i="🌾"><b>Rotación con datos NASA</b><span>Plan de 3 temporadas con NASA POWER, NDVI y tus prioridades</span></li><li data-i="✦"><b>Asistente con fuentes</b><span>Respuestas que citan fichas de cultivo y datos de tu chacra</span></li></ul>
+<button type="button" class="btn" id="demo" style="max-width:340px">Probar con una chacra de ejemplo</button>
+<div class="chips"><span class="chip">NASA POWER</span><span class="chip">NASA FIRMS</span><span class="chip">NASA GIBS</span></div></section><div>
+<form class="card" id="authForm" style="margin-top:16px"><h2 id="authTitle">Iniciar sesión</h2>
+<label for="email">Correo</label><input id="email" type="email" autocomplete="email" required>
+<label for="pass">Contraseña</label><input id="pass" type="password" minlength="6" autocomplete="current-password" required>
+<p class="msg" id="authMsg" role="alert"></p><button class="btn" style="width:100%">Entrar</button>
+<button type="button" class="btn ghost" id="toggle" style="width:100%">Crear una cuenta nueva</button></form>
+<p class="muted" style="margin-top:12px"><a href="index.html">Volver al mapa de incendios</a></p></div></main>
+
+<div id="app" hidden>
+<header><h1><b>ASTROFIRE</b><span class="sub">Portal agro</span></h1>
+<nav><button class="btn" data-tab="chacras">Mis chacras</button><button class="btn ghost" data-tab="clima">Clima Perú</button><button class="btn ghost" data-tab="rotacion">Rotación</button><a class="btn ghost" href="fuego.html">Calendario de fuego</a><a class="btn ghost" href="index.html">Mapa de incendios</a><button class="btn ghost" id="logout">Salir</button></nav></header>
+<div class="wrap" id="main">
+<section id="tab-chacras" class="two">
+<div class="card"><h2>Registrar una chacra</h2>
+<label for="cName">Nombre de la chacra</label><input id="cName" maxlength="40" placeholder="Ej. Chacra del cerro">
+<label>Ubicación de la chacra</label><p class="gps" id="gps">Obteniendo ubicación para centrar el mapa…</p>
+<div id="farmMap" aria-label="Mapa para seleccionar las cuatro esquinas de la chacra"></div>
+<p style="margin-top:12px"><strong id="step">Haz clic en el mapa para marcar la esquina 1 de 4</strong></p><p class="muted">Selecciona cuatro esquinas. Puedes arrastrar los marcadores para corregirlas; el polígono y el área se actualizarán automáticamente.</p>
+<ol id="cornerList"></ol><p class="msg" id="cornerMsg" role="alert"></p>
+<button class="btn ghost" id="resetCorners" style="width:100%">Borrar esquinas</button>
+<div id="cropBox" hidden><p id="areaOut" style="margin-top:14px"></p>
+<label for="crop">Cultivo</label><select id="crop"></select>
+<label for="sown">Fecha de siembra</label><input id="sown" type="date">
+<button class="btn" id="saveChacra" style="width:100%">Guardar chacra</button></div></div>
+<div id="list"></div></section>
+<section id="tab-clima" hidden><section class="weather-monitor" aria-label="Temperatura y pronóstico del Perú">
+<div class="weather-monitor-header"><div><h4>Clima · Perú</h4><p id="weatherStatus">Consultando temperatura…</p></div><span class="weather-source">Open-Meteo</span></div>
+<label class="weather-select-label" for="weatherPoint">Punto de monitoreo</label><select id="weatherPoint" class="weather-select"></select>
+<div id="weatherDetails" class="weather-details"><p class="weather-empty">Cargando condiciones actuales…</p></div><div class="weather-point-list" id="weatherPointList"></div></section></section>
+<section id="tab-rotacion" hidden><div class="card"><h2>Plan de rotación (3 temporadas)</h2><p class="muted">Combina NASA POWER, el riesgo de fuego del entorno y tus prioridades. Valores agronómicos de referencia: valídalos con INIA o un agrónomo.</p>
+<label for="rChacra">Chacra</label><select id="rChacra"></select>
+<div class="row"><div><label for="rH1">Cultivo anterior</label><select id="rH1"></select></div><div><label for="rH2">Hace 2 temporadas</label><select id="rH2"></select></div></div>
+<div class="row"><div><label for="rOM">Materia orgánica del suelo</label><select id="rOM"><option value="bajo">Baja</option><option value="medio" selected>Media</option><option value="alto">Alta</option></select></div><div><label><input id="rRiego" type="checkbox" style="width:auto;min-height:0"> Tengo riego disponible</label></div></div>
+<h3 style="margin-top:14px">Tus prioridades (0–5)</h3>
+<label for="wI">Ingreso</label><input id="wI" type="range" min="0" max="5" value="3"><label for="wA">Ahorro de agua</label><input id="wA" type="range" min="0" max="5" value="2"><label for="wS">Salud del suelo</label><input id="wS" type="range" min="0" max="5" value="4"><label for="wR">Bajo riesgo (clima y fuego)</label><input id="wR" type="range" min="0" max="5" value="3">
+<button class="btn" id="rGo" style="width:100%">Generar plan</button><div id="rOut" style="margin-top:14px"></div></div></section>
+<button class="btn fab" data-tab="asistente" aria-label="Abrir asistente">✦ Asistente</button>
+<section id="tab-asistente" hidden><div class="card"><h2>Asistente de la chacra <span class="chip" id="aMode" style="margin:0 0 0 auto">✦ API Gemini</span></h2><p class="muted">Responde con las fichas de cultivos, la rotación, el calendario de fuego y los datos de tu chacra. Cada respuesta cita sus fuentes.</p>
+<label for="aChacra">Chacra</label><select id="aChacra"></select>
+<div class="row" style="margin-top:8px"><button class="btn ghost sug">¿En qué etapa está mi cultivo y cuánta agua necesita?</button><button class="btn ghost sug">¿Qué sembrar después de mi cultivo?</button><button class="btn ghost sug">¿Debo quemar el rastrojo?</button><button class="btn ghost sug">¿De dónde salen estos datos?</button></div>
+<div id="aLog" class="ai-log" aria-live="polite"><div class="ai-msg bot">Hola, soy el asistente de tu chacra. Pregunta por riego, rotación o fuego: cito mis fuentes y no invento datos.</div></div>
+<div class="row"><input id="aQ" placeholder="Pregunta sobre riego, rotación o fuego…" aria-label="Tu pregunta" style="flex:3"><button class="btn" id="aSend">Enviar</button></div></div></section>
+<section id="tab-alertas" class="mobile-view" hidden><div class="card"><div class="section-heading"><div><h2>Tu entorno en vivo</h2><p class="muted">Focos de calor MODIS/VIIRS a menos de 10 km de tus chacras (últimas 24 h).</p></div></div><div id="alertMap" style="height:300px;border-radius:12px;margin-bottom:12px"></div><div id="alertList"><div class="skel"></div></div></div></section>
+<section id="tab-perfil" class="mobile-view" hidden><div class="card"><div class="section-heading"><div><h2>Mi perfil</h2><p class="muted">Cuenta local del portal agroproductor.</p></div></div><div class="profile-row"><span class="profile-avatar">AG</span><div><strong id="profileEmail">Productor</strong><p class="muted">Productor agrícola</p></div></div><div class="profile-note"><strong>Modo demostración</strong><p class="muted">Tus datos se guardan únicamente en este navegador.</p></div><button class="btn ghost mobile-logout" id="mobileLogout">Cerrar sesión</button></div></section>
+ </div><nav class="mobile-nav" aria-label="Navegación móvil"><button class="mobile-nav-item active" data-tab="chacras"><span>⌂</span><small>Chacras</small></button><button class="mobile-nav-item" data-tab="mapa"><span>⌖</span><small>Mapa</small></button><button class="mobile-nav-item" data-tab="clima"><span>☼</span><small>Clima</small></button><button class="mobile-nav-item" data-tab="rotacion"><span>⟳</span><small>Rotación</small></button><button class="mobile-nav-item" data-tab="alertas"><span>!</span><small>Alertas</small></button><button class="mobile-nav-item" data-tab="perfil"><span>◉</span><small>Perfil</small></button></nav></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/crops.js"></script><script src="js/weather.js"></script><script src="js/config.local.js"></script><script src="js/config.js"></script><script src="js/harmonize.js"></script><script src="js/api.js"></script><script src="js/rotation.js"></script><script>window.RAG_ENDPOINT=window.RAG_ENDPOINT||'https://8787-imjp2htsdu8a4d4u7tf8t-6efa9624.us3.manus.computer/'</script><script src="js/rag.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const db=()=>JSON.parse(localStorage.getItem('agro_users')||'{}'),put=u=>localStorage.setItem('agro_users',JSON.stringify(u));
+let mode='login',me=null,pos=null,corners=[],lastMap=null,watch=null,climaLoaded=false,farmMap=null,farmPolygon=null,farmMarkers=[];
+const hash=async t=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)))].map(x=>x.toString(16).padStart(2,'0')).join('');
+const K=111320,dist=(a,b)=>Math.hypot((a.lng-b.lng)*K*Math.cos(a.lat*Math.PI/180),(a.lat-b.lat)*K);
+const area=c=>{const o=c[0],xy=c.map(p=>[(p.lng-o.lng)*K*Math.cos(o.lat*Math.PI/180),(p.lat-o.lat)*K]);let a=0;xy.forEach((p,i)=>{const q=xy[(i+1)%xy.length];a+=p[0]*q[1]-q[0]*p[1]});return Math.abs(a)/2/1e4};
+const center=c=>({lat:c.reduce((s,p)=>s+p.lat,0)/c.length,lng:c.reduce((s,p)=>s+p.lng,0)/c.length});
+// --- Login / registro (cuentas guardadas solo en este navegador) ---
+$('#toggle').onclick=()=>{mode=mode==='login'?'register':'login';$('#authTitle').textContent=mode==='login'?'Iniciar sesión':'Crear cuenta';$('#toggle').textContent=mode==='login'?'Crear una cuenta nueva':'Ya tengo cuenta';$('#authMsg').textContent=''};
+$('#authForm').onsubmit=async e=>{e.preventDefault();const em=$('#email').value.trim().toLowerCase(),h=await hash($('#pass').value),u=db(),m=$('#authMsg');
+ if(mode==='register'){if(u[em]){m.textContent='Ese correo ya tiene una cuenta. Inicia sesión.';return}u[em]={h,chacras:[]};put(u)}
+ else if(!u[em]){m.textContent='No existe una cuenta en este navegador. Pulsa “Crear una cuenta nueva” para registrarte.';return}
+ else if(u[em].h!==h){m.textContent='La contraseña no coincide con la cuenta registrada en este navegador.';return}
+ localStorage.setItem('agro_session',em);enter(em)};
+$('#logout').onclick=()=>{localStorage.removeItem('agro_session');location.reload()};
+function enter(em){me=em;$('#auth').hidden=true;$('#app').hidden=false;$('#profileEmail').textContent=em;$('#crop').innerHTML=CROPS.map(c=>`<option value="${c.id}">${c.n}</option>`).join('');$('#sown').max=new Date().toISOString().slice(0,10);initFarmMap();startGPS();drawCorners();renderList()}
+function showMobileTab(tab){
+ const view=tab==='mapa'?'chacras':tab;
+ ['chacras','clima','rotacion','asistente','alertas','perfil'].forEach(id=>{const node=$('#tab-'+id);if(node)node.hidden=id!==view});
+ document.querySelectorAll('.mobile-nav-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ document.querySelectorAll('header [data-tab]').forEach(b=>b.classList.toggle('ghost',b.dataset.tab!==view));
+ if(tab==='clima'&&!climaLoaded){climaLoaded=true;peruWeatherMonitor.init()}
+ if(tab==='rotacion')fillRot();
+ if(tab==='alertas')renderAlerts();
+ if(tab==='asistente')fillAsk();
+ if(tab==='mapa')setTimeout(()=>{$('#farmMap')?.scrollIntoView({behavior:'smooth',block:'center'});farmMap?.invalidateSize()},80);
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>showMobileTab(b.dataset.tab));
+$('#mobileLogout').onclick=()=>$('#logout').click();
+// --- Mapa interactivo y selección poligonal del terreno ---
+function initFarmMap(){
+ if(farmMap||typeof L==='undefined')return;
+ farmMap=L.map('farmMap',{zoomControl:true}).setView([-9.19,-75.015],6);
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(farmMap);
+ L.control.layers(null,{'NDVI (vigor de la vegetación)':gibs()}).addTo(farmMap);
+ farmMap.getContainer().style.cursor='crosshair';
+ farmMap.on('click',e=>{
+  if(corners.length>=4)return say('Ya seleccionaste las 4 esquinas. Arrastra los marcadores para corregirlas.');
+  corners.push({lat:e.latlng.lat,lng:e.latlng.lng});say('');drawCorners();
+ });
+ const resizeObserver=new ResizeObserver(()=>farmMap.invalidateSize());
+ resizeObserver.observe(document.getElementById('farmMap'));
+ requestAnimationFrame(()=>farmMap.invalidateSize());
+}
+function startGPS(){if(!navigator.geolocation){$('#gps').textContent='GPS no disponible. Selecciona las esquinas manualmente en el mapa.';return}
+ watch=navigator.geolocation.watchPosition(p=>{pos=p.coords;const a={lat:pos.latitude,lng:pos.longitude};$('#gps').textContent=`Mapa centrado en tu ubicación · ±${Math.round(pos.accuracy)} m`;
+  if(farmMap&&!lastMap){lastMap=a;farmMap.setView([a.lat,a.lng],17)}},
+ e=>{$('#gps').textContent='No pudimos leer tu ubicación. Puedes seleccionar las esquinas manualmente en el mapa.'},{enableHighAccuracy:true,maximumAge:2000})}
+const say=t=>$('#cornerMsg').textContent=t;
+function renderFarmGeometry(){
+ if(!farmMap)return;
+ farmMarkers.forEach(m=>m.remove());farmMarkers=[];
+ corners.forEach((p,i)=>{const marker=L.marker([p.lat,p.lng],{draggable:true,title:`Esquina ${i+1}`}).addTo(farmMap);marker.bindTooltip(`Esquina ${i+1}`,{permanent:true,direction:'top',offset:[0,-8]});marker.on('dragend',e=>{const q=e.target.getLatLng();corners[i]={lat:q.lat,lng:q.lng};say('');drawCorners()});farmMarkers.push(marker)});
+ if(farmPolygon)farmPolygon.remove();
+ if(corners.length>=2)farmPolygon=L.polygon(corners.map(p=>[p.lat,p.lng]),{color:'#63d8ff',weight:3,fillColor:'#63d8ff',fillOpacity:.2}).addTo(farmMap);
+}
+function drawCorners(){const n=corners.length,done=n===4;$('#step').textContent=done?'Las 4 esquinas están registradas':`Haz clic en el mapa para marcar la esquina ${n+1} de 4`;$('#cornerList').innerHTML=corners.map((p,i)=>`<li>Esquina ${i+1}: ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}</li>`).join('');$('#cropBox').hidden=!done;if(done)$('#areaOut').textContent=`Superficie poligonal aproximada: ${area(corners).toFixed(2)} ha`;renderFarmGeometry()}
+$('#resetCorners').onclick=()=>{corners=[];say('');drawCorners()};
+$('#saveChacra').onclick=()=>{const n=$('#cName').value.trim(),d=$('#sown').value;if(!n||!d)return say('Escribe el nombre de la chacra y la fecha de siembra.');
+ const u=db();u[me].chacras.push({id:Date.now(),name:n,crop:$('#crop').value,sown:d,corners,ha:area(corners)});put(u);corners=[];$('#cName').value='';drawCorners();renderList()};
+function del(id){if(!confirm('¿Eliminar esta chacra?'))return;const u=db();u[me].chacras=u[me].chacras.filter(c=>c.id!==id);put(u);renderList()}
+// --- Chacras, clima de Open-Meteo y recomendaciones ---
+function renderList(){const L=db()[me].chacras;$('#list').innerHTML=L.length?L.map(c=>{const k=CROPS.find(x=>x.id===c.crop);return `<article class="card" style="margin-bottom:16px"><h3>${esc(c.name)}</h3><p class="muted">${k.n} · ${c.ha.toFixed(2)} ha · sembrada el ${esc(c.sown)}</p><div id="adv${c.id}"><p class="muted">Consultando el clima de tu terreno…</p></div><a class="btn ghost" href="fuego.html?chacra=${c.id}">Calendario de fuego</a><button class="btn ghost" onclick="del(${c.id})">Eliminar</button></article>`}).join(''):'<div class="card"><h2>Mis chacras</h2><p class="muted">Aún no registraste ninguna. Selecciona las 4 esquinas de tu terreno para empezar.</p></div>';L.forEach(refresh)}
+async function weather(p){const q=new URLSearchParams({latitude:p.lat.toFixed(4),longitude:p.lng.toFixed(4),current:'temperature_2m,relative_humidity_2m',hourly:'soil_moisture_3_to_9cm',daily:'precipitation_sum,et0_fao_evapotranspiration',forecast_days:'3',timezone:'auto'});const r=await fetch('https://api.open-meteo.com/v1/forecast?'+q);if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+async function refresh(c){const box=$('#adv'+c.id);try{box.innerHTML=advice(CROPS.find(x=>x.id===c.crop),c,await weather(center(c.corners)))}catch(e){box.innerHTML=`<p class="msg">No pudimos consultar Open-Meteo (${esc(e.message)}). Revisa tu conexión.</p>`}}
+function advice(k,c,d){const T=d.current.temperature_2m,RH=d.current.relative_humidity_2m,x=d.daily,age=Math.floor((Date.now()-new Date(c.sown+'T00:00:00'))/864e5);
+ const i=d.hourly.time.findIndex(t=>t>=d.current.time),sm=d.hourly.soil_moisture_3_to_9cm?.[i],rain0=x.precipitation_sum[0]||0,rain48=rain0+(x.precipitation_sum[1]||0);
+ const st=age<0?null:k.st.find(s=>age<=s[0])||k.st[k.st.length-1],need=st?Math.max(0,(x.et0_fao_evapotranspiration[0]||0)*st[2]-rain0):0,r=[];
+ if(!st)r.push(['ok',`La siembra está programada en ${-age} día(s).`]);
+ else if(rain48>=5)r.push(['ok',`Se esperan ${rain48.toFixed(1)} mm de lluvia en 48 h: pospón el riego.`]);
+ else if((T>k.t[1]&&RH<k.rh)||(sm!=null&&sm<.15)||(RH<k.rh&&need>3))r.push(['warn',`Riega hoy, al atardecer o de madrugada. Hay ${T.toFixed(0)}°C y ${RH.toFixed(0)}% de humedad. Repón unos ${need.toFixed(1)} mm (≈ ${(need*10*c.ha).toFixed(0)} m³ para ${c.ha.toFixed(2)} ha).`]);
+ else r.push(['ok','Humedad y temperatura normales: hoy no hace falta regar.']);
+ if(T>k.t[1]+4)r.push(['bad',`Calor extremo para ${k.n} (ideal ${k.t[0]}–${k.t[1]}°C): evita labores al sol y protege el cultivo.`]);
+ else if(T>k.t[1])r.push(['warn',`Temperatura sobre el rango ideal de ${k.n} (${k.t[0]}–${k.t[1]}°C): vigila el estrés por calor.`]);
+ if(T<=4)r.push(['bad','Riesgo de helada: protege el cultivo (cobertura o riego ligero previo) y revisa el pronóstico de la madrugada.']);
+ else if(T<k.t[0])r.push(['warn',`Frío para ${k.n} (ideal ${k.t[0]}–${k.t[1]}°C): el crecimiento será más lento.`]);
+ if(RH>85&&T>=10&&T<=25)r.push(['warn','Humedad muy alta con temperaturas templadas: vigila hongos y enfermedades foliares.']);
+ if(st&&st[2]>=1.1)r.push(['warn',`Etapa de mayor demanda de agua (${st[1]}): evita que el suelo se seque.`]);
+ return `<div class="chips"><span class="chip">${T.toFixed(1)}°C</span><span class="chip">Humedad ${RH.toFixed(0)}%</span>${sm!=null?`<span class="chip">Suelo ${(sm*100).toFixed(0)}%</span>`:''}<span class="chip">${st?`${st[1]} · día ${age}`:'Sin sembrar'}</span></div>`+r.map(([c,t])=>`<div class="rec"><i class="dot ${c}"></i><span>${t}</span></div>`).join('')+'<div style="height:12px"></div>'}
+function fillRot(){const L=db()[me].chacras,o=CROPS.filter(k=>TRAITS[k.id]).map(k=>`<option value="${k.id}">${k.n}</option>`).join('');
+ $('#rChacra').innerHTML=L.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');$('#rH1').innerHTML=$('#rH2').innerHTML='<option value="">—</option>'+o}
+async function runRotation(){
+ const c=db()[me].chacras.find(x=>String(x.id)===$('#rChacra').value),out=$('#rOut');
+ if(!c){out.innerHTML='<p class="muted">Registra una chacra primero.</p>';return}
+ out.innerHTML='<p class="muted">Consultando NASA POWER y el histórico de fuego…</p>';
+ const ctr=center(c.corners),[clim0,w0,hh,tr]=await Promise.all([Rotation.climate(ctr.lat,ctr.lng),weather(ctr).catch(()=>null),Harmonize.history(Harmonize.farmPoly(c)),Rotation.trend(ctr.lat,ctr.lng)]),clim=clim0&&{...clim0,t:clim0.t+(tr?tr.dT*.5:0)},cal=Harmonize.calendar(hh.events);
+ const x={clim,elev:w0?.elevation,om:$('#rOM').value,riego:$('#rRiego').checked,sow:new Date(),fire:{critical:cal.critical}},hs=[c.crop,$('#rH1').value,$('#rH2').value].filter(Boolean);
+ const SC=[['Tus prioridades',{suelo:+$('#wS').value,agua:+$('#wA').value,ingreso:+$('#wI').value,clima:+$('#wR').value}],['Máximo ingreso',{suelo:1,agua:1,ingreso:5,clima:1}],['Máxima salud del suelo',{suelo:5,agua:1,ingreso:1,clima:1}]];
+ const nm=id=>CROPS.find(k=>k.id===id).n,avg=(pl,k)=>pl.reduce((s,p)=>s+p.s[k],0)/pl.length,bar=(l,v)=>`<small class="muted">${l} ${v.toFixed(0)}</small><div class="bar"><i style="width:${v}%"></i></div>`;
+ out.innerHTML=(tr?trendCard(tr):'')+SC.map(([t,w])=>{const pl=Rotation.plan(w,hs,x);return `<article class="card" style="margin-bottom:12px"><div class="sc-h"><h3>${t}</h3>${t==='Tus prioridades'?'<span class="chip ok2">Recomendado</span>':''}<span class="score" title="Puntaje promedio (0–100)">${Math.round(['suelo','agua','ingreso','clima'].reduce((x,k)=>x+avg(pl,k),0)/4)}</span></div><p><b>${pl.map(p=>nm(p.id)).join(' → ')}</b></p>${timeline(pl,cal)}${bar('Suelo',avg(pl,'suelo'))}${bar('Agua',avg(pl,'agua'))}${bar('Ingreso (ilustrativo)',avg(pl,'ingreso'))}${bar('Clima y riesgo',avg(pl,'clima'))}${pl.filter(p=>p.s.fuego).map(p=>`<div class="rec"><i class="dot warn"></i><span>${nm(p.id)}: la cosecha cae en una semana crítica de fuego (${cal.critical.map(Harmonize.label).join(', ')}). Incorpora el rastrojo; no lo quemes.</span></div>`).join('')}</article>`}).join('')
+  +`<p class="muted">Clima: ${clim?'NASA POWER':'sin datos POWER (puntaje neutro)'} · Fuego: ${hh.real?'FIRMS real':'histórico SIMULADO'} · Elevación: ${x.elev??'s/d'} m (Open-Meteo)</p>`;
+}
+const spark=(yrs,k,l,u,d)=>{const v=yrs.map(o=>o[k]),lo=Math.min(...v),hi=Math.max(...v),pts=v.map((a,i)=>`${(i/(v.length-1)*300).toFixed(1)},${(50-(a-lo)/((hi-lo)||1)*46).toFixed(1)}`).join(' ');
+ return `<div style="margin:8px 0"><small class="muted">${l}: ${d>=0?'+':''}${d.toFixed(k==='t'?2:0)} ${u} por década</small><svg viewBox="0 0 300 54" width="100%" height="54" role="img" aria-label="${l} ${yrs[0].y}–${yrs.at(-1).y}"><polyline points="${pts}" fill="none" style="stroke:var(--cyan)" stroke-width="2"/></svg></div>`};
+const trendCard=tr=>`<article class="card" style="margin-bottom:12px"><h3>Cómo cambió tu clima</h3>${spark(tr.yrs,'t','Temperatura media anual','°C',tr.dT)}${spark(tr.yrs,'rain','Lluvia anual','mm',tr.dRain)}<p class="muted">NASA POWER ${tr.yrs[0].y}–${tr.yrs.at(-1).y}. El plan usa la temperatura proyectada a ~5 años.</p></article>`;
+const timeline=(pl,cal)=>{const D=pl.reduce((s,p)=>s+TRAITS[p.id].ciclo,0),t0=+pl[0].sow;let h='',a=0;
+ for(let d=0;d<D;d+=7)if(cal.critical.includes(Harmonize.week(new Date(t0+d*864e5).toISOString().slice(0,10))))h+=`<u style="left:${d/D*100}%;width:${7/D*100}%" title="Semana crítica de fuego"></u>`;
+ pl.forEach(p=>{const c=TRAITS[p.id].ciclo;h+=`<b style="left:${a/D*100}%;width:${c/D*100-.5}%">${CROPS.find(k=>k.id===p.id).n}</b>`;a+=c});
+ return `<div class="tl" role="img" aria-label="Línea de tiempo de rotación con semanas críticas de fuego">${h}</div><small class="muted">Franjas naranjas: semanas críticas de fuego</small>`};
+$('#rGo').onclick=runRotation;
+function gibs(){const d=new Date(Date.now()-24*864e5),doy=Math.floor((d-Date.UTC(d.getUTCFullYear(),0,1))/864e5);d.setUTCDate(d.getUTCDate()-doy%8);
+ return L.tileLayer(`https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/${d.toISOString().slice(0,10)}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png`,{subdomains:'abc',maxNativeZoom:9,maxZoom:19,opacity:.7,noWrap:true,attribution:'NDVI: NASA EOSDIS GIBS'})}
+let am,amLayer;
+async function renderAlerts(){const box=$('#alertList'),F=db()[me].chacras,SN={MV:'MODIS+VIIRS',M:'MODIS',V:'VIIRS'};
+ if(!am){am=L.map('alertMap').setView([-9.2,-75],5);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(am);L.control.layers(null,{'NDVI MODIS (NASA GIBS)':gibs()}).addTo(am)}
+ setTimeout(()=>am.invalidateSize(),60);if(amLayer)amLayer.remove();amLayer=L.layerGroup().addTo(am);
+ if(!F.length){box.innerHTML='<p class="muted">Registra una chacra para ver tu entorno y recibir alertas.</p>';return}
+ F.forEach(c=>{const o=center(c.corners);L.polygon(c.corners.map(p=>[p.lat,p.lng]),{color:'#55e0b5'}).addTo(amLayer);L.circle([o.lat,o.lng],{radius:1e4,color:'#63d8ff',weight:1,fillOpacity:.04}).addTo(amLayer)});
+ am.fitBounds(L.featureGroup(amLayer.getLayers()).getBounds().pad(.3));
+ box.innerHTML='<div class="skel"></div><div class="skel"></div>';
+ const fires=await nasaAPI.fetchRealFireData();
+ if(nasaAPI.mode!=='REAL'){box.innerHTML='<p class="msg">Sin conexión a NASA FIRMS (falta la clave en js/config.local.js): se muestran tus chacras, sin focos.</p>';return}
+ const near=f=>F.map(c=>dist({lat:f.latitude,lng:f.longitude},center(c.corners)));
+ fires.filter(f=>Math.min(...near(f))<5e4).forEach(f=>L.circleMarker([f.latitude,f.longitude],{radius:4,color:'#ff9a62',weight:1,fillOpacity:.8}).bindPopup(`${SN[f.sensors]} · ${esc(f.acq_date)} ${esc(f.acq_time)} UTC`).addTo(amLayer));
+ const hits=F.flatMap(c=>fires.map(f=>({c,f,d:dist({lat:f.latitude,lng:f.longitude},center(c.corners))})).filter(h=>h.d<=1e4)).sort((a,b)=>a.d-b.d);
+ box.innerHTML=hits.length?hits.map(h=>`<div class="rec fade"><i class="dot bad"></i><span><b>${esc(h.c.name)}</b>: foco a ${(h.d/1000).toFixed(1)} km · ${SN[h.f.sensors]} · ${esc(h.f.acq_date)} ${esc(h.f.acq_time)} UTC</span></div>`).join(''):'<div class="empty-state"><div class="empty-icon">✓</div><h3>Sin focos cerca</h3><p class="muted">No hay detecciones a menos de 10 km de tus chacras.</p></div>'}
+let askDocs=[],askCtx=null;
+async function loadAskCtx(){const c=db()[me].chacras.find(x=>String(x.id)===$('#aChacra').value);askCtx=c||null;let ex=[];
+ if(c){const o=center(c.corners),[w,hh]=await Promise.all([weather(o).catch(()=>null),Harmonize.history(Harmonize.farmPoly(c))]);ex=Rag.context(c,w,Harmonize.calendar(hh.events))}
+ askDocs=Rag.kb(ex)}
+async function fillAsk(){$('#aChacra').innerHTML=db()[me].chacras.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')||'<option value="">Sin chacras</option>';await loadAskCtx();$('#aMode').textContent=window.RAG_ENDPOINT?'✦ API Gemini':'Offline · sin LLM';Rag.status().then(m=>{if(m)$('#aMode').textContent='✦ '+m})}
+const askHist=[];
+const md=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[(\d+)\]/g,'<sup class="cite">$1</sup>').replace(/(?:^|\n)[-*] (.+)/g,'\n<li>$1</li>').replace(/(<li>.*?<\/li>\n?)+/g,m=>`<ul>${m.replace(/\n/g,'')}</ul>`).replace(/\n{2,}/g,'<br><br>').replace(/\n/g,'<br>');
+async function sendAsk(q){q=(q||$('#aQ').value).trim();if(!q)return;$('#aQ').value='';const log=$('#aLog');log.querySelectorAll('.fu').forEach(b=>b.remove());
+ log.insertAdjacentHTML('beforeend',`<div class="ai-msg me fade">${esc(q)}</div>`);
+ const t=document.createElement('div');t.className='ai-msg bot';t.innerHTML='<div class="skel" style="width:140px"></div>';log.appendChild(t);log.scrollTop=log.scrollHeight;
+ if(!askDocs.length)await loadAskCtx();const r=await Rag.ask(q,askDocs,askCtx?.crop,askHist);t.remove();
+ askHist.push({role:'user',text:q},{role:'model',text:r.text});askHist.splice(0,Math.max(0,askHist.length-8));
+ const cs=(r.cited.length?r.cited:[1,2,3]).map(n=>[n,r.src[n-1]]).filter(x=>x[1]).slice(0,5);
+ log.insertAdjacentHTML('beforeend',`<div class="ai-msg bot fade">${md(r.text)}<div>${cs.map(([n,d])=>`<span class="chip">[${n}] ${esc(d.src)}</span>`).join('')}<small class="muted"> ${esc(r.mode)}</small></div>${r.followups.slice(0,3).map(f=>`<button type="button" class="chip fu">${esc(f)}</button>`).join('')}</div>`);
+ log.querySelectorAll('.fu').forEach(b=>b.onclick=()=>sendAsk(b.textContent));log.scrollTop=log.scrollHeight}
+$('#aSend').onclick=()=>sendAsk();$('#aQ').onkeydown=e=>{if(e.key==='Enter')sendAsk()};$('#aChacra').onchange=loadAskCtx;document.querySelectorAll('.sug').forEach(b=>b.onclick=()=>sendAsk(b.textContent));
+$('#demo').onclick=()=>{const em='demo@astrofire.pe',la=-8.38,lo=-74.55,d=.0007,corners=[{lat:la+d,lng:lo-d},{lat:la+d,lng:lo+d},{lat:la-d,lng:lo+d},{lat:la-d,lng:lo-d}],u=db();
+ u[em]={chacras:[{id:1,name:'Chacra demo · Pucallpa',crop:'maiz',sown:new Date(Date.now()-45*864e5).toISOString().slice(0,10),corners,ha:area(corners)}]};put(u);localStorage.setItem('agro_session',em);enter(em)};
+{const s=localStorage.getItem('agro_session');if(s&&db()[s])enter(s)}
+</script><footer class="foot">Datos: NASA FIRMS · NASA POWER · NASA GIBS · Open-Meteo. Proyecto para el NASA Space Apps Challenge 2026. Valores agronómicos de referencia: validar con INIA o un agrónomo.</footer></body></html>
